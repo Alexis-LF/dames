@@ -3,6 +3,7 @@
 
 from classes.Plateau import Plateau
 from datetime import datetime
+from os import listdir
 
 class Jeu:
     """classe Jeu"""
@@ -11,11 +12,15 @@ class Jeu:
         """initialisations :"""
         self.__nbTours = 0
         self.__nbToursSansMange = 0
+
         self.__nbToursMaxSansMange = 30
+
         self.__joueurCourant = 1
         self.__joueurAdverse = 2
         self.__joueur1 = "Mael"
         self.__joueur2 = "Alexis"
+
+        self.__savesDir = "sauvegardes"
 
         self.__strDep1 = "Pion à déplacer du joueur X >"
         self.__strDep2 = "déplacement du PION du joueur X >"
@@ -50,12 +55,35 @@ class Jeu:
             return 0
 
     def sauvegardeJeu(self,filename):
-        fp = open(f"sauvegardes/{filename}",'w')
-        fp.write(f"J1={self.__joueur1}\n")
-        fp.write(f"J2={self.__joueur2}\n")
-        fp.write(f"DATE={datetime.now().strftime('%H:%M:%S le %A %d %B %Y')}\n")
-        self.__plateau.sauvegarde()
+        fp = open(f"{self.__savesDir}/{filename}",'w')
+        fp.write(f"{self.__joueur1}\n")
+        fp.write(f"{self.__joueur2}\n")
+        fp.write(f"{datetime.now().strftime('%H:%M:%S le %A %d %B %Y')}\n")
+        fp.write(self.__plateau.sauvegarde())
 
+
+
+    def choixChargement(self) -> str:
+        listSaves = listdir(self.__savesDir)
+        print(listSaves)
+        choix = 0
+        while choix == 0:
+            index = 0
+            print("Liste des sauvegardes")
+            for saveName in listSaves:
+                with open(f"{self.__savesDir}/{saveName}") as saveFic:
+                    
+                    print(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
+                    index +=1
+                # print("\n")
+            print(f"Total : {index} sauvegardes")
+            choix = int(input("choisissez une sauvegarde >"))
+        return f"{self.__savesDir}/{listSaves[choix-1]}"
+
+    def chargementJeu(self):
+        fileName = self.choixChargement()
+        print("ok")
+        
 
     def commenceJeu(self):
         finPartie = 0

@@ -77,13 +77,15 @@ class Plateau:
                 print("",end="\n")
         self.affichePionsRestants()
     
-    def sauvegarde(self):
+    def sauvegarde(self) -> str:
+        lignes = ""
         nb_cases = 0
         for case in self.__cases:
             nb_cases+=1
-            case.affiche(sauvegarde=True)
+            lignes += case.affiche(sauvegarde=True)
             if (nb_cases%10) == 0:
-                print("",end="\n")
+                lignes += "\n"
+        return lignes
 
         
     def affichePionsRestants(self):
