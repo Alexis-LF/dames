@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from classes.Jeu import Jeu
-
+from datetime import datetime
 # main file
 """
 PLATEAU :
@@ -35,7 +35,8 @@ TODO:
 if __name__ == "__main__":
     print("hello")
     jeu = Jeu()
-    print("commencement du jeu de dames !")
-    jeu.commenceJeu()
+    # print("commencement du jeu de dames !")
+    # jeu.commenceJeu()
+    # jeu.sauvegardeJeu(f"test_{datetime.now()}.txt")
+    print(jeu.choixChargement())
     print("fin du programme")
-    # jeu.sauvegardeJeu("test.txt")
