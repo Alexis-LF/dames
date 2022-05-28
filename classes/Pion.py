@@ -21,7 +21,7 @@ class Pion:
     def getJoueur(self) -> int:
         return self.__joueur
 
-    def getValSave(self,joueur : int, dame : bool):
+    def getValSave(self,joueur : int, dame : bool = False):
         if joueur == 2:
             if dame:
                 return self.__j2DameFic

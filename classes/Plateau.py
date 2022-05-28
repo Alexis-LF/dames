@@ -54,7 +54,7 @@ class Plateau:
             i+=1
     
     def __initPionsSauvegarde__(self,fileName):
-        saveFic = open(filename,"r")
+        saveFic = open(fileName,"r")
         # on s'en fiche des 3 première lignes
         for i in range(0,3):
             _ = saveFic.readline()
@@ -66,12 +66,12 @@ class Plateau:
             line = saveFic.readline()
             # on lit les 10 cases de la ligne
             for j in range(0,10):
-                if line[i] not in ".\n":
+                if line[j] not in ".\n":
                     # cette case contient un pion
                     if self.__cases[(i*10)+j].setPionSave(line[j]) == 1:
                         self.__nbPionsJ1 += 1
                     else:
-                        self.__nbPionsJ1 += 2
+                        self.__nbPionsJ2 += 1
         saveFic.close()
 
     

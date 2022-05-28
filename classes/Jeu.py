@@ -35,7 +35,7 @@ class Jeu:
     def chargementJeu(self):
         fileName = self.choixChargement()
         self.__plateau = Plateau(fileName)
-        print("ok")
+        print("Partie restaurée")
 
     def __joueurSuivant__(self):
         if self.__joueurCourant == 1:
