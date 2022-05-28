@@ -1,7 +1,7 @@
 class Pion:
     """classe Pion"""
 
-    def __init__(self,joueur : int):
+    def __init__(self,joueur : int = 0):
         """initialisations :"""        
         self.__dame = False
         self.__joueur = joueur
@@ -20,6 +20,18 @@ class Pion:
 
     def getJoueur(self) -> int:
         return self.__joueur
+
+    def getValSave(self,joueur : int, dame : bool):
+        if joueur == 2:
+            if dame:
+                return self.__j2DameFic
+            else:
+                return self.__j2PionFic
+        else:
+            if dame:
+                return self.__j1DameFic
+            else:
+                return self.__j1PionFic
 
     def setJoueur(self,joueur : int):
         self.__joueur = joueur

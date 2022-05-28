@@ -47,6 +47,21 @@ class Case:
     def setPion(self, pion : Pion):
         self.__pion = pion
 
+    def setPionSave(self, pionSave : str) -> int:
+        pion = Pion()
+        if pionSave.lower() == pion.getValSave(1):
+            pion = Pion.setJoueur(1)
+        elif pionSave.lower() == pion.getValSave(2):
+            pion = Pion.setJoueur(2)
+        else:
+            print("ERREUR DE FICHIER dans Case.py/setPionSave()")
+            print(f"\tLe fichier de sauvegarde contient le caractère \"{pionSave}\" non reconnu.")
+        dames = f"{pion.getValSave(1,True)}{pion.getValSave(2,True)}"
+        if pionSave in dames:
+            pion.setDame(True)
+        self.__pion = Pion()
+        return pion.getJoueur()
+
     def getPion(self) -> Pion:
         if self.__pion == None:
             return False

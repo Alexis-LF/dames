@@ -1,3 +1,4 @@
+from fileinput import filename
 from time import sleep
 from typing import Tuple
 from classes.Pion import Pion
@@ -7,13 +8,16 @@ class Plateau:
     """classe Plateau"""
 
 
-    def __init__(self) :
+    def __init__(self,fileName = False) :
         self.__lignes = "ABCDEFGHIJ"
         self.__nbPionsJ1 = 20
         self.__nbPionsJ2 = 20
 
         self.__cases = self.__initCases__()
-        self.__initPions__()
+        if fileName :
+            self.__initPionsSauvegarde__(fileName)
+        else:
+            self.__initPions__()
     
 
     def __initCases__(self) -> list[Case]:
@@ -48,6 +52,28 @@ class Plateau:
                 self.__cases[length-i].setPion(Pion(1))
                 nbPions+=1
             i+=1
+    
+    def __initPionsSauvegarde__(self,fileName):
+        saveFic = open(filename,"r")
+        # on s'en fiche des 3 première lignes
+        for i in range(0,3):
+            _ = saveFic.readline()
+        # on initialise le nb de pion
+        self.__nbPionsJ1 = 0
+        self.__nbPionsJ2 = 0
+        # on lit les 10 lignes du plateau
+        for i in range(0,10):
+            line = saveFic.readline()
+            # on lit les 10 cases de la ligne
+            for j in range(0,10):
+                if line[i] not in ".\n":
+                    # cette case contient un pion
+                    if self.__cases[(i*10)+j].setPionSave(line[j]) == 1:
+                        self.__nbPionsJ1 += 1
+                    else:
+                        self.__nbPionsJ1 += 2
+        saveFic.close()
+
     
     def getNbPions(self,joueur : int) -> int:
         if joueur == 1 :

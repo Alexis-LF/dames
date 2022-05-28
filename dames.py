@@ -35,8 +35,8 @@ TODO:
 if __name__ == "__main__":
     print("hello")
     jeu = Jeu()
-    # print("commencement du jeu de dames !")
-    # jeu.commenceJeu()
-    # jeu.sauvegardeJeu(f"test_{datetime.now()}.txt")
-    print(jeu.choixChargement())
+    print("commencement du jeu de dames !")
+    jeu.chargementJeu()
+    jeu.commenceJeu()
+
     print("fin du programme")

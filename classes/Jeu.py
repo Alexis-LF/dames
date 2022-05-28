@@ -27,7 +27,15 @@ class Jeu:
 
 
         print("Initialisation du plateau")
+        self.__plateau = None
+
+    def nouvellePartie(self):
         self.__plateau = Plateau()
+
+    def chargementJeu(self):
+        fileName = self.choixChargement()
+        self.__plateau = Plateau(fileName)
+        print("ok")
 
     def __joueurSuivant__(self):
         if self.__joueurCourant == 1:
@@ -61,8 +69,6 @@ class Jeu:
         fp.write(f"{datetime.now().strftime('%H:%M:%S le %A %d %B %Y')}\n")
         fp.write(self.__plateau.sauvegarde())
 
-
-
     def choixChargement(self) -> str:
         listSaves = listdir(self.__savesDir)
         print(listSaves)
@@ -71,7 +77,7 @@ class Jeu:
             index = 0
             print("Liste des sauvegardes")
             for saveName in listSaves:
-                with open(f"{self.__savesDir}/{saveName}") as saveFic:
+                with open(f"{self.__savesDir}/{saveName}","r") as saveFic:
                     
                     print(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
                     index +=1
@@ -79,11 +85,6 @@ class Jeu:
             print(f"Total : {index} sauvegardes")
             choix = int(input("choisissez une sauvegarde >"))
         return f"{self.__savesDir}/{listSaves[choix-1]}"
-
-    def chargementJeu(self):
-        fileName = self.choixChargement()
-        print("ok")
-        
 
     def commenceJeu(self):
         finPartie = 0
