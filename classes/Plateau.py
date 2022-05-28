@@ -246,6 +246,7 @@ class Plateau:
         else:
             if len(cases) > 3:
                 print("un pion ne peut pas se déplacer aussi loin")
+                return False
             elif (len(cases)) == 3:
                 if not cases[1].estVide():
                     print(f"il y a un pion du joueur {cases[1].getPion().getJoueur()} qui va se faire manger")
@@ -266,10 +267,10 @@ class Plateau:
 
     def boutDuPlateau(self,joueur: int, case_id: int) -> bool:
         if joueur == 1:
-            if self.__cases[case_id].getPosX == 'A':
+            if self.__cases[case_id].getPosX() == 'A':
                 return True
         if joueur == 2:
-            if self.__cases[case_id].getPosX == 'J':
+            if self.__cases[case_id].getPosX() == 'J':
                 return True
         return False
 
