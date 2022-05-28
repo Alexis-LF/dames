@@ -72,7 +72,7 @@ class Plateau:
             nb_cases+=1
             if ((nb_cases-1)%10) == 0:
                 print(self.__lignes[(int)(nb_cases/10)],end=" ")            
-            case.affiche()
+            print(case.affiche(),end="")
             if (nb_cases%10) == 0:
                 print("",end="\n")
         self.affichePionsRestants()
@@ -89,11 +89,11 @@ class Plateau:
     def affichePionsRestants(self):
         pionAffiche = Pion(1)    
         print("\t",end="")
-        pionAffiche.affiche()
+        print(pionAffiche.affiche(),end="")
         print(f" = {self.__nbPionsJ1}")
         print("\t",end="")
         pionAffiche.setJoueur(2)
-        pionAffiche.affiche()
+        print(pionAffiche.affiche(),end="")
         print(f" = {self.__nbPionsJ2}")
 
     def afficheLigne(self,ligne : str):

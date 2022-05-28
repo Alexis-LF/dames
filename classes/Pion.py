@@ -27,26 +27,26 @@ class Pion:
     def setDame(self,dame :bool):
         self.__dame = dame
     
-    def affiche(self,sauvegarde=False):
+    def affiche(self,sauvegarde=False) -> str:
         if self.__joueur == 2:
             if self.__dame:
                 if sauvegarde:
-                    print(self.__j2DameFic,end="")
+                    return self.__j2DameFic 
                 else:
-                    print(self.__j2DameAff,end="")
+                    return self.__j2DameAff 
             else:
                 if sauvegarde:
-                    print(self.__j2PionFic,end="")
+                    return self.__j2PionFic 
                 else:
-                    print(self.__j2PionAff,end="")
+                    return self.__j2PionAff 
         else:
             if self.__dame:
                 if sauvegarde:
-                    print(self.__j1DameFic,end="")
+                    return self.__j1DameFic 
                 else:
-                    print(self.__j1DameFic,end="")
+                    return self.__j1DameAff 
             else:
                 if sauvegarde:
-                    print(self.__j1PionFic,end="")
+                    return self.__j1PionFic
                 else:                    
-                    print(self.__j1PionFic,end="")
+                    return self.__j1PionAff 

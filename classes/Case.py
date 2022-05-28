@@ -63,17 +63,17 @@ class Case:
             return False
         return True
 
-    def affiche(self,sauvegarde=False):
+    def affiche(self,sauvegarde=False) -> str:
         if self.__pion == None:
             if sauvegarde:
-                print(self.__CaseFic,end="")
+                return self.__CaseFic
             else:
                 if self.__claire :
-                    print(self.__CaseClaireAff,end="")
+                    return self.__CaseClaireAff
                 else:
-                    print(self.__CaseFonceeAff,end="")
+                    return self.__CaseFonceeAff
         else:
             if sauvegarde:
                 self.__pion.affiche(sauvegarde=True)
             else:
-                self.__pion.affiche()
+                return self.__pion.affiche()
