@@ -74,6 +74,6 @@ class Case:
                     return self.__CaseFonceeAff
         else:
             if sauvegarde:
-                self.__pion.affiche(sauvegarde=True)
+                return self.__pion.affiche(sauvegarde=True)
             else:
                 return self.__pion.affiche()
