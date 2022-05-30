@@ -215,9 +215,6 @@ class Plateau:
 
 
     def deplacementValide(self,coords : list[str], joueur : int) -> bool:
-        """
-        TODO : vérifier le déplacement en arrière pour un simple pion
-        """
         # vérification si la case existe et est vide
         cases = []
         for i in range(0,2):
