@@ -35,7 +35,8 @@ if __name__ == "__main__":
     print("hello")
     jeu = Jeu()
     print("commencement du jeu de dames !")
-    jeu.chargementJeu()
+    # jeu.chargementJeu()
+    jeu.nouvellePartie()
     jeu.commenceJeu()
 
     print("fin du programme")

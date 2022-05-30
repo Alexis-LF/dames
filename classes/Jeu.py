@@ -87,9 +87,11 @@ class Jeu:
         return f"{self.__savesDir}/{listSaves[choix-1]}"
 
     def commenceJeu(self):
+        datePartie = datetime.now().strftime('%H:%M:%S le %A %d %B %Y')
         finPartie = 0
         while(finPartie == 0):
             nbManges = self.__tour__()
+            self.sauvegardeJeu(f"Auto : {datePartie}")
             self.__nbTours += 1
             if nbManges > 0:
                 self.__nbToursSansMange = 0
@@ -140,6 +142,6 @@ class Jeu:
             for i in range (0,len(listDplcmt)-1):
                 nbManges = self.__plateau.deplace_pion([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant)
             # on le déselectionne
-            self.__plateau.getCase(listDplcmt[i+1]).getPion().setSelect(True)
+            self.__plateau.getCase(listDplcmt[i+1]).getPion().setSelect(False)
             
         return nbManges
