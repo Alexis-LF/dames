@@ -4,6 +4,7 @@ class Pion:
     def __init__(self,joueur : int = 0):
         """initialisations :"""        
         self.__dame = False
+        self.__select = False
         self.__joueur = joueur
 
         self.__j2PionAff = "⚫"
@@ -14,9 +15,14 @@ class Pion:
         self.__j1PionFic = "x"
         self.__j1DameAff = "🤍"
         self.__j1DameFic = "X"
+        self.__SelectPionAff = "🔵"
+        self.__SelectDameAff = "💙"
 
     def estDame(self) -> bool:
         return self.__dame
+
+    def estSelect(self) -> bool:
+        return self.__select
 
     def getJoueur(self) -> int:
         return self.__joueur
@@ -38,8 +44,18 @@ class Pion:
 
     def setDame(self,dame :bool):
         self.__dame = dame
-    
+
+    def setSelect(self,select :bool):
+        self.__select = select
+
     def affiche(self,sauvegarde=False) -> str:
+        if self.__select :
+            if self.__dame:
+                return self.__SelectDameAff
+            else:
+                return self.__SelectPionAff
+
+
         if self.__joueur == 2:
             if self.__dame:
                 if sauvegarde:

@@ -121,7 +121,11 @@ class Jeu:
                 # départ de tel pion
                 depart = input(self.__strDep1.replace("joueur X",f"joueur {self.__joueurCourant}"))
                 pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
-
+            # récupération, sélection du pion et affichage
+            pion = self.__plateau.getCase(depart).getPion()
+            self.__plateau.getCase(depart).getPion().setSelect(True)
+            self.__plateau.affiche()
+            
             # arrivé à un ou plusieurs pions pour un enchainement de bouffage de pions
             arrivee = input(self.__strDep2.replace("joueur X",f"joueur {self.__joueurCourant}"))
 
@@ -129,11 +133,13 @@ class Jeu:
             listDplcmt.append(depart)
             listDplcmt += arrivee.split(",")
 
-            pion = self.__plateau.getCase(depart).getPion()
 
             for i in range (0,len(listDplcmt)-1):
                 deplacement_valide = self.__plateau.deplacementValide([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant, pion)
         
             for i in range (0,len(listDplcmt)-1):
                 nbManges = self.__plateau.deplace_pion([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant)
+            # on le déselectionne
+            self.__plateau.getCase(listDplcmt[i+1]).getPion().setSelect(True)
+            
         return nbManges
