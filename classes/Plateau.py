@@ -136,7 +136,7 @@ class Plateau:
                 case.affiche()
 
     def getCaseId(self,coords : str) -> int:
-        if len(coords) < 2:
+        if len(coords) < 2 or len(coords) > 3:
             return False
         # récupération de la ligne
         ligne = coords[0].upper()
@@ -144,7 +144,10 @@ class Plateau:
         col = coords[1:]
         if col[:-1] == "\n" :
             col.remove[:-1]
-        col = int(col)  
+        try:
+            col = int(col)  
+        except:
+            return False
         # vérification que c'est bien dans le tableau
         if ligne not in self.__lignes:
             print(f"ligne {ligne} hors tableau")
