@@ -214,7 +214,7 @@ class Plateau:
         return cases
 
 
-    def deplacementValide(self,coords : list[str], joueur : int) -> bool:
+    def deplacementValide(self,coords : list[str], joueur : int, pion : Pion = None) -> bool:
         # vérification si la case existe et est vide
         cases = []
         for i in range(0,2):
@@ -239,9 +239,13 @@ class Plateau:
                     print("Un pion à soi-même est sur le chemin")
                     return False
 
+        # soit on assume que le pion est sur la case de départ
+        # soit c'est un pion qui fait du miam multiple, et il n'est pas encore arrivé
+        # sur la case de départ, alors il faut envoyer en paramètre de fonction
+        if pion == None:
+            pion = cases[0].getPion()
         # dame ou simple pion ?
-        if cases[0].getPion().estDame()  :
-            print("c'est une dame")
+        if pion.estDame()  :
             return True
         else:
             if len(cases) > 3:

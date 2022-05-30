@@ -109,18 +109,31 @@ class Jeu:
     
     def __tour__(self) -> int:
         nbManges = 0
-        coords1 = str()
-        coords2 = str()
+        depart = str()
+        arrivee = str()
+        listDplcmt = list()
         self.__plateau.affiche()
         print(f"au tour du joueur {self.__joueurCourant}")
         deplacement_valide = False
         while deplacement_valide == False:
             pion_valide = False
             while pion_valide == False:
-                coords1 = input(self.__strDep1.replace("joueur X",f"joueur {self.__joueurCourant}"))
-                pion_valide = self.__plateau.PionAuJoueur(coords1,self.__joueurCourant)
+                # départ de tel pion
+                depart = input(self.__strDep1.replace("joueur X",f"joueur {self.__joueurCourant}"))
+                pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
 
-            coords2 = input(self.__strDep2.replace("joueur X",f"joueur {self.__joueurCourant}"))
-            deplacement_valide = self.__plateau.deplacementValide([coords1,coords2],self.__joueurCourant)
-        nbManges = self.__plateau.deplace_pion([coords1,coords2],self.__joueurCourant)
+            # arrivé à un ou plusieurs pions pour un enchainement de bouffage de pions
+            arrivee = input(self.__strDep2.replace("joueur X",f"joueur {self.__joueurCourant}"))
+
+            # on met la liste des cases où sera le pion dans un tab
+            listDplcmt.append(depart)
+            listDplcmt += arrivee.split(",")
+
+            pion = self.__plateau.getCase(depart).getPion()
+
+            for i in range (0,len(listDplcmt)-1):
+                deplacement_valide = self.__plateau.deplacementValide([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant, pion)
+        
+            for i in range (0,len(listDplcmt)-1):
+                nbManges = self.__plateau.deplace_pion([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant)
         return nbManges
