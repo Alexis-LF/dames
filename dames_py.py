@@ -10,6 +10,16 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 bot = commands.Bot(command_prefix = "/")
 
+
+
+async def affiche(msg,ctx):
+    await ctx.channel.send(
+    f"""
+    *Depuis la console :*
+    **{msg}**
+    """
+    )
+
 @bot.event
 async def on_ready():
     print("Le bot est prêt.")
@@ -20,13 +30,9 @@ async def dames(ctx, Arg = None):
     await ctx.channel.send(
         f"""
         **Jeu des dames**
-        *vous avez tapé :*
-        ```
-        {ctx.message.content}
-        ```
         """
     )
-    jeu = Jeu()
+    jeu = Jeu(affiche,ctx)
     print("commencement du jeu de dames !")
     jeu.chargementJeu()
     jeu.commenceJeu()

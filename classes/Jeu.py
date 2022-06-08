@@ -1,17 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+from asyncore import loop
+from types import coroutine
+from unittest import result
 from classes.Plateau import Plateau
 from datetime import datetime
 from os import listdir
+import asyncio
+import nest_asyncio
+
+
 
 class Jeu:
     """classe Jeu"""
 
-    def __init__(self,fx_affiche):
+    def __init__(self,fx_affiche,ctx_discord):
         """initialisations :"""
-
-        self.__affiche = fx_affiche
+        nest_asyncio.apply()
+        self.__affiche_externe = fx_affiche
+        self.__ctx_discord = ctx_discord
 
         self.__nbTours = 0
         self.__nbToursSansMange = 0
@@ -30,8 +38,15 @@ class Jeu:
         self.__strDep2 = "déplacement du PION du joueur X >"
 
 
-        self.__affiche("Initialisation du plateau")
+        self.affiche("Initialisation du plateau")
         self.__plateau = None
+
+    def affiche(self,msg):
+        loop = asyncio.get_event_loop()
+        coroutine  = self.__affiche_externe(msg,self.__ctx_discord)
+        loop.run_until_complete(coroutine)
+
+        
 
     def nouvellePartie(self):
         self.__plateau = Plateau()
@@ -44,7 +59,7 @@ class Jeu:
     def chargementJeu(self):
         fileName = self.choixChargement()
         self.__plateau = Plateau(fileName)
-        self.__affiche("Partie restaurée")
+        self.affiche("Partie restaurée")
 
     def __joueurSuivant__(self):
         if self.__joueurCourant == 1:
@@ -80,18 +95,18 @@ class Jeu:
 
     def choixChargement(self) -> str:
         listSaves = listdir(self.__savesDir)
-        self.__affiche(listSaves)
+        self.affiche(listSaves)
         choix = 0
         while choix == 0:
             index = 0
-            self.__affiche("Liste des sauvegardes")
+            self.affiche("Liste des sauvegardes")
             for saveName in listSaves:
                 with open(f"{self.__savesDir}/{saveName}","r") as saveFic:
                     
-                    self.__affiche(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
+                    self.affiche(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
                     index +=1
-                # self.__affiche("\n")
-            self.__affiche(f"Total : {index} sauvegardes")
+                # self.affiche("\n")
+            self.affiche(f"Total : {index} sauvegardes")
             choix = int(input("choisissez une sauvegarde >"))
         return f"{self.__savesDir}/{listSaves[choix-1]}"
 
@@ -111,11 +126,11 @@ class Jeu:
             self.__joueurSuivant__()
             finPartie = self.__finPartie__()
         
-        self.__affiche("fin du jeu !")
+        self.affiche("fin du jeu !")
         if finPartie == 3:
-            self.__affiche(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
+            self.affiche(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
         else:
-            self.__affiche(f"Victoire du joueur {finPartie} !")
+            self.affiche(f"Victoire du joueur {finPartie} !")
 
     
     def __tour__(self) -> int:
@@ -124,7 +139,7 @@ class Jeu:
         arrivee = str()
         listDplcmt = list()
         self.__plateau.affiche()
-        self.__affiche(f"au tour du joueur {self.__joueurCourant}")
+        self.affiche(f"au tour du joueur {self.__joueurCourant}")
         deplacement_valide = False
         while deplacement_valide == False:
             pion_valide = False
