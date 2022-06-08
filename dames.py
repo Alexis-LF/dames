@@ -25,18 +25,19 @@ Je veux la case B1 = ligne B (1*10) col 1 (0) = id 10
 Je veux la case xy = ligne x (x*10) col y (y-1) = id x*10 + (y-1)
 
 TODO:
-     - faire les miams multiples
-     - mettre en surbrillance le pion choisi
      - faire en sorte de sauvegarder / charger une partie => plus qu'à proposer un système de mots-clés
 
 """
 
+def affiche(txt : str):
+  print(txt)
+
 if __name__ == "__main__":
-    print("hello")
-    jeu = Jeu()
+    jeu = Jeu(affiche)
     print("commencement du jeu de dames !")
-    # jeu.chargementJeu()
-    jeu.nouvellePartie()
+    jeu.chargementJeu()
+    # jeu.nouvellePartie()
     jeu.commenceJeu()
 
     print("fin du programme")
+
