@@ -8,8 +8,11 @@ from os import listdir
 class Jeu:
     """classe Jeu"""
 
-    def __init__(self):
+    def __init__(self,fx_affiche):
         """initialisations :"""
+
+        self.__affiche = fx_affiche
+
         self.__nbTours = 0
         self.__nbToursSansMange = 0
 
@@ -27,7 +30,7 @@ class Jeu:
         self.__strDep2 = "déplacement du PION du joueur X >"
 
 
-        print("Initialisation du plateau")
+        self.__affiche("Initialisation du plateau")
         self.__plateau = None
 
     def nouvellePartie(self):
@@ -41,7 +44,7 @@ class Jeu:
     def chargementJeu(self):
         fileName = self.choixChargement()
         self.__plateau = Plateau(fileName)
-        print("Partie restaurée")
+        self.__affiche("Partie restaurée")
 
     def __joueurSuivant__(self):
         if self.__joueurCourant == 1:
@@ -77,18 +80,18 @@ class Jeu:
 
     def choixChargement(self) -> str:
         listSaves = listdir(self.__savesDir)
-        print(listSaves)
+        self.__affiche(listSaves)
         choix = 0
         while choix == 0:
             index = 0
-            print("Liste des sauvegardes")
+            self.__affiche("Liste des sauvegardes")
             for saveName in listSaves:
                 with open(f"{self.__savesDir}/{saveName}","r") as saveFic:
                     
-                    print(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
+                    self.__affiche(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
                     index +=1
-                # print("\n")
-            print(f"Total : {index} sauvegardes")
+                # self.__affiche("\n")
+            self.__affiche(f"Total : {index} sauvegardes")
             choix = int(input("choisissez une sauvegarde >"))
         return f"{self.__savesDir}/{listSaves[choix-1]}"
 
@@ -108,11 +111,11 @@ class Jeu:
             self.__joueurSuivant__()
             finPartie = self.__finPartie__()
         
-        print("fin du jeu !")
+        self.__affiche("fin du jeu !")
         if finPartie == 3:
-            print(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
+            self.__affiche(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
         else:
-            print(f"Victoire du joueur {finPartie} !")
+            self.__affiche(f"Victoire du joueur {finPartie} !")
 
     
     def __tour__(self) -> int:
@@ -121,7 +124,7 @@ class Jeu:
         arrivee = str()
         listDplcmt = list()
         self.__plateau.affiche()
-        print(f"au tour du joueur {self.__joueurCourant}")
+        self.__affiche(f"au tour du joueur {self.__joueurCourant}")
         deplacement_valide = False
         while deplacement_valide == False:
             pion_valide = False
