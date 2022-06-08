@@ -17,6 +17,7 @@ class Jeu:
 
         self.__joueurCourant = 1
         self.__joueurAdverse = 2
+        self.tirageAuSort()
         self.__joueur1 = "Mael"
         self.__joueur2 = "Alexis"
 
@@ -31,6 +32,11 @@ class Jeu:
 
     def nouvellePartie(self):
         self.__plateau = Plateau()
+
+    # on inverse le joueur courant initalement à 1 par défaut
+    def tirageAuSort(self):
+        if int(datetime.now().microsecond % 2) == 0 :
+            self.__joueurSuivant__()
 
     def chargementJeu(self):
         fileName = self.choixChargement()
@@ -140,7 +146,7 @@ class Jeu:
                 deplacement_valide = self.__plateau.deplacementValide([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant, pion)
         
             for i in range (0,len(listDplcmt)-1):
-                nbManges = self.__plateau.deplace_pion([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant)
+                nbManges += self.__plateau.deplace_pion([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant)
             # on le déselectionne
             self.__plateau.getCase(listDplcmt[i+1]).getPion().setSelect(False)
             
