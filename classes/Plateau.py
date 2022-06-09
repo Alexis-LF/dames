@@ -89,6 +89,7 @@ class Plateau:
     def affiche(self) -> str:
         txt = str()
         nb_cases = 0
+        txt += "```"
         txt += "  1 2 3 4 5 6 7 8 9 10\n"
         for case in self.__cases:
             nb_cases+=1
@@ -98,6 +99,7 @@ class Plateau:
             if (nb_cases%10) == 0:
                 txt += "\n"
         txt += self.affichePionsRestants()
+        txt += "```"
         return txt
     
     def sauvegarde(self) -> str:
