@@ -34,8 +34,12 @@ def affiche(txt : str):
   txt = txt.replace("`","")
   print(txt)
 
-async def prompt(joueur : str):
-  return input(f"{joueur} > ")
+def prompt(joueur : str = False):
+  if joueur:
+    return input(f"{joueur} > ")
+  else:
+    return input(f"> ")
+
 
 if __name__ == "__main__":
     jeu = Jeu(affiche,prompt)

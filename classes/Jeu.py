@@ -20,7 +20,7 @@ class Jeu:
         if ctx_discord != None:
             nest_asyncio.apply()
         self.__affiche_externe = fx_affiche
-        self.prompt = fx_prompt
+        self.__prompt_externe = fx_prompt
         self.__ctx_discord = ctx_discord
 
         self.__nbTours = 0
@@ -51,6 +51,13 @@ class Jeu:
         else:
             self.__affiche_externe(msg)
 
+    def prompt(self,joueur : str = False):
+        if self.__ctx_discord != None:
+            loop = asyncio.get_event_loop()
+            coroutine  = self.__prompt_externe(joueur)
+            return loop.run_until_complete(coroutine)
+        else:
+            return self.__prompt_externe(joueur)        
         
 
     def nouvellePartie(self,nomJ1 : str,nomJ2 : str):
@@ -133,7 +140,8 @@ class Jeu:
             a_print += f"```Total : {index} sauvegardes\n"
             a_print += f"Choissez une sauvegarde :\n"
             self.affiche(a_print)
-            choix = int(self.prompt(self.__nomJoueur__(self.__joueurCourant)))
+            choix = self.prompt()
+            choix = int(choix)
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):

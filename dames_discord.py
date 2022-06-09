@@ -15,10 +15,14 @@ bot = commands.Bot(command_prefix = "/")
 async def affiche(msg,message_a_edit):
     await message_a_edit.edit(content=msg)
 
-async def prompt(joueur : str):
+async def prompt(joueur : str = False):
     msgDiscord = await bot.wait_for("message")
     channelBon = msgDiscord.channel == ctx.channel
-    bonJoueur = msgDiscord.author.nick = joueur
+    if  joueur :
+        bonJoueur = msgDiscord.author.nick = joueur
+    else:
+        bonJoueur = True
+    
     if channelBon and bonJoueur:
         msg = msgDiscord.content.strip()
         await msgDiscord.delete()
