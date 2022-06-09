@@ -209,30 +209,27 @@ class Plateau:
         return cases
 
 
-    def deplacementValide(self,coords : list[str], joueur : int, pion : Pion = None) -> bool:
+    def deplacementValide(self,coords : list[str], joueur : int, pion : Pion = None) -> int:
         # vérification si la case existe et est vide
         cases = []
         for i in range(0,2):
             cases.append(self.getCase(coords[i]))
             if cases[i] == False :
-                print("case marquée non valide")
-                return False
+                return 0 , "Case de destination non valide."
         if cases[1].estVide() == False:
-            print("case marquée non vide")
-            return False            
+            return 0 , "Case de destination non vide."
         # vérification de la distance
         cases = self.getCasesTraversees(cases[0],cases[1])
 
         if len(cases) <= 1:
-            return False
+            return 0 , "Case de destination non valide."
 
         # on vérifie s'il y a un pion à soi-même sur le chemin (sans compter la 1re et dernière case)
         for i in range(1,len(cases)-1):
             if not(cases[i].estVide()):
                 # print(f"case {cases[i].getPosX()}{cases[i].getPosY()} pas vide")
                 if cases[i].getPion().getJoueur() == joueur:
-                    print("Un pion à soi-même est sur le chemin")
-                    return False
+                    return 0 , "Un pion à soi-même est sur le chemin."
 
         # soit on assume que le pion est sur la case de départ
         # soit c'est un pion qui fait du miam multiple, et il n'est pas encore arrivé
@@ -240,29 +237,28 @@ class Plateau:
         if pion == None:
             pion = cases[0].getPion()
         # dame ou simple pion ?
-        if pion.estDame()  :
-            return True
+        if pion.estDame() :
+            for i in range(1,len(cases)-1):
+                if not cases[1].estVide():
+                    # pion du joueur adverse sur le chemin
+                    return 2 , "Le joueur adverse va se faire manger !"
+            # pas de pion du joueur adverse sur le chemin
+            return 1 , f"Déplacement de {len(cases)-1} cases."
         else:
             if len(cases) > 3:
-                print("un pion ne peut pas se déplacer aussi loin")
-                return False
+                return 0 , "Un pion ne peut pas se déplacer aussi loin !"
             elif (len(cases)) == 3:
                 if not cases[1].estVide():
-                    print(f"il y a un pion du joueur {cases[1].getPion().getJoueur()} qui va se faire manger")
-                    return True
+                    return 2 , "Le joueur adverse va se faire manger !"
                 else:
-                    print(f"un pion peut se déplacer de 2 cases que s'il y a un pion adversaire entre les 2")
-                    return False
+                    return 0 , "Un pion peut se déplacer de 2 cases que s'il y a un pion adversaire entre les 2."
             elif len(cases) == 2:
                 versLeHaut = cases[0].estPlusBas(cases[len(cases)-1])
                 if (joueur == 1 and not versLeHaut) or ( joueur == 2 and versLeHaut):
-                    print("déplacement dans le sens contraire de la marche")
-                    return False
+                    return 0 , "Déplacement dans le sens contraire de la marche"
                 else:
-                    print("déplacement d'une case")
-                    return True
-        print("ERREUR INTERNE : deplacementValide() n'a pas déterminé la possibilité de se déplacer")
-        return False
+                    return 1 , "Déplacement d'une case."
+        return 0 , "ERREUR INTERNE : deplacementValide() n'a pas déterminé la possibilité de se déplacer."
 
     def boutDuPlateau(self,joueur: int, case_id: int) -> bool:
         if joueur == 1:
@@ -271,7 +267,7 @@ class Plateau:
         if joueur == 2:
             if self.__cases[case_id].getPosX() == 'J':
                 return True
-        return False
+        return 0
 
     def deplace_pion(self,coords : list[str], joueur : int) -> int:
         # on récupère les identifiants des cases, pour pouvoir les modifier ensuite
