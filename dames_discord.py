@@ -16,17 +16,25 @@ async def affiche(msg,message_a_edit):
     await message_a_edit.edit(content=msg)
 
 async def prompt(joueur : str = False):
-    msgDiscord = await bot.wait_for("message")
-    channelBon = msgDiscord.channel == ctx.channel
-    if  joueur :
-        bonJoueur = msgDiscord.author.nick = joueur
-    else:
-        bonJoueur = True
+    channelBon = False
+    bonJoueur = False
+    while (not channelBon) and (not bonJoueur) :
+        print(f"entrée dans prompt pour discord : joueur = {joueur}")
+        msgDiscord = await bot.wait_for("message")
+        print(f"\tMessage reçu !")
+        channelBon = msgDiscord.channel == ctx.channel
+        if  joueur :
+            bonJoueur = msgDiscord.author.nick = joueur
+        else:
+            bonJoueur = True
+        
+        if channelBon and bonJoueur:
+            msg = msgDiscord.content.strip()
+            await msgDiscord.delete()
+            return msg
+        else:
+            print("\tmauvaise personne concenée")
     
-    if channelBon and bonJoueur:
-        msg = msgDiscord.content.strip()
-        await msgDiscord.delete()
-        return msg
 
 @bot.event
 async def on_ready():
