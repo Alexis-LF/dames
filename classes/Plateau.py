@@ -53,17 +53,13 @@ class Plateau:
                 nbPions+=1
             i+=1
     
-    def __initPionsSauvegarde__(self,fileName):
-        saveFic = open(fileName,"r")
-        # on s'en fiche des 3 première lignes
-        for i in range(0,3):
-            _ = saveFic.readline()
+    def __initPionsSauvegarde__(self,plateauData):
         # on initialise le nb de pion
         self.__nbPionsJ1 = 0
         self.__nbPionsJ2 = 0
         # on lit les 10 lignes du plateau
         for i in range(0,10):
-            line = saveFic.readline()
+            line = plateauData[i]
             # on lit les 10 cases de la ligne
             for j in range(0,10):
                 if line[j] not in ".\n":
@@ -72,7 +68,6 @@ class Plateau:
                         self.__nbPionsJ1 += 1
                     else:
                         self.__nbPionsJ2 += 1
-        saveFic.close()
 
     
     def getNbPions(self,joueur : int) -> int:

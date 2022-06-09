@@ -61,9 +61,61 @@ class Jeu:
             self.__joueurSuivant__()
 
     def chargementJeu(self):
+        line = str()
+        plateauData : list[str] = list()
+        parametres = dict()
+        # l'utilisateur choisit la partie désirée
         fileName = self.choixChargement()
-        self.__plateau = Plateau(fileName)
+        # ouverture de la sauvegarde choisie
+        fp = open(f"{self.__savesDir}/{fileName}",'r')
+        # on récupère les infos de la partie
+        while line.find("PLATEAU") != -1 :
+            line = fp.readline()
+            key, value = line.partition("=")[::2]
+            parametres[key.strip()] = value
+        # on les applique
+        self.__joueur1 = parametres["joueur1"] or "joueur 1"
+        self.__joueur2 = parametres["joueur2"] or "joueur 2"
+        self.__nbTours = int(parametres["nbTours"]) or 0
+        self.__nbToursSansMange = int(parametres["nbToursSansMange"]) or 0
+        self.__joueurCourant = int(parametres["joueurCourant"]) or 1
+        self.__joueurAdverse = 1 if self.__joueurCourant == 2 else 2
+        # on récupère le plateau
+        for _ in range(0,10):
+            plateauData.append(fp.readline())
+
+        self.__plateau = Plateau(plateauData)
         self.affiche("Partie restaurée")
+
+
+    def sauvegardeJeu(self,filename):
+        fp = open(f"{self.__savesDir}/{filename}",'w')
+        fp.write(f"joueur1 = {self.__joueur1}\n")
+        fp.write(f"joueur2 = {self.__joueur2}\n")
+        fp.write(f"datetime = {datetime.now().strftime('%H:%M:%S le %A %d %B %Y')}\n")
+        fp.write(f"nbTours = {self.__nbTours}\n")
+        fp.write(f"nbToursSansMange = {self.__nbToursSansMange}\n")
+        fp.write(f"joueurCourant = {self.__joueurCourant}\n")
+        fp.write(f"PLATEAU\n")
+        fp.write(self.__plateau.sauvegarde())
+        fp.close()
+
+    def choixChargement(self) -> str:
+        listSaves = listdir(self.__savesDir)
+        self.affiche(listSaves)
+        choix = 0
+        while choix == 0:
+            index = 0
+            self.affiche("Liste des sauvegardes")
+            for saveName in listSaves:
+                with open(f"{self.__savesDir}/{saveName}","r") as saveFic:
+                    
+                    self.affiche(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
+                    index +=1
+                # self.affiche("\n")
+            self.affiche(f"Total : {index} sauvegardes")
+            choix = int(input("choisissez une sauvegarde >"))
+        return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
         if self.__joueurCourant == 1:
@@ -89,30 +141,6 @@ class Jeu:
             return 3
         else:
             return 0
-
-    def sauvegardeJeu(self,filename):
-        fp = open(f"{self.__savesDir}/{filename}",'w')
-        fp.write(f"{self.__joueur1}\n")
-        fp.write(f"{self.__joueur2}\n")
-        fp.write(f"{datetime.now().strftime('%H:%M:%S le %A %d %B %Y')}\n")
-        fp.write(self.__plateau.sauvegarde())
-
-    def choixChargement(self) -> str:
-        listSaves = listdir(self.__savesDir)
-        self.affiche(listSaves)
-        choix = 0
-        while choix == 0:
-            index = 0
-            self.affiche("Liste des sauvegardes")
-            for saveName in listSaves:
-                with open(f"{self.__savesDir}/{saveName}","r") as saveFic:
-                    
-                    self.affiche(f"{index+1}:\t{saveFic.readline()[:-1]} contre {saveFic.readline()[:-1]} : {saveFic.readline()[:-1]}")
-                    index +=1
-                # self.affiche("\n")
-            self.affiche(f"Total : {index} sauvegardes")
-            choix = int(input("choisissez une sauvegarde >"))
-        return f"{self.__savesDir}/{listSaves[choix-1]}"
 
     def commenceJeu(self):
         datePartie = datetime.now().strftime('%H:%M:%S le %A %d %B %Y')
