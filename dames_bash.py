@@ -30,13 +30,18 @@ TODO:
 """
 
 def affiche(txt : str):
+  txt = txt.replace("*","")
+  txt = txt.replace("`","")
   print(txt)
+
+async def prompt(joueur : str):
+  return input(f"{joueur} > ")
 
 if __name__ == "__main__":
     jeu = Jeu(affiche)
     print("commencement du jeu de dames !")
     jeu.chargementJeu()
-    # jeu.nouvellePartie()
+    # jeu.nouvellePartie("1 essai","1 essai prime")
     jeu.commenceJeu()
 
     print("fin du programme")

@@ -12,13 +12,17 @@ bot = commands.Bot(command_prefix = "/")
 
 
 
-async def affiche(msg,ctx):
-    await ctx.channel.send(
-    f"""
-    *Depuis la console :*
-    **{msg}**
-    """
-    )
+async def affiche(msg,message_a_edit):
+    await message_a_edit.edit(content=msg)
+
+async def prompt(joueur : str):
+    msgDiscord = await bot.wait_for("message")
+    channelBon = msgDiscord.channel == ctx.channel
+    bonJoueur = msgDiscord.author.nick = joueur
+    if channelBon and bonJoueur:
+        msg = msgDiscord.content
+        await msgDiscord.delete()
+        return msg
 
 @bot.event
 async def on_ready():
@@ -27,12 +31,12 @@ async def on_ready():
 @bot.command(aliases = ["dame"])
 async def dames(ctx, Arg = None):
     print("commande dames appellée")
-    await ctx.channel.send(
+    message_a_edit = await ctx.channel.send(
         f"""
         **Jeu des dames**
         """
     )
-    jeu = Jeu(affiche,ctx)
+    jeu = Jeu(affiche,message_a_edit)
     print("commencement du jeu de dames !")
     jeu.chargementJeu()
     jeu.commenceJeu()
