@@ -15,11 +15,12 @@ import nest_asyncio
 class Jeu:
     """classe Jeu"""
 
-    def __init__(self,fx_affiche,ctx_discord = None):
+    def __init__(self,fx_affiche,fx_prompt,ctx_discord = None):
         """initialisations :"""
         if ctx_discord != None:
             nest_asyncio.apply()
         self.__affiche_externe = fx_affiche
+        self.prompt = fx_prompt
         self.__ctx_discord = ctx_discord
 
         self.__nbTours = 0
@@ -132,7 +133,7 @@ class Jeu:
             a_print += f"```Total : {index} sauvegardes\n"
             a_print += f"Choissez une sauvegarde :\n"
             self.affiche(a_print)
-            choix = int(input("> "))
+            choix = int(self.prompt(self.__nomJoueur__(self.__joueurCourant)))
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
@@ -209,7 +210,8 @@ class Jeu:
                 # on envoie le texte à afficher
                 self.affiche(msgs)
                 msgs = ""
-                depart = input("> ")
+                depart = self.prompt(self.__nomJoueur__(self.__joueurCourant))
+
                 pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
                 if not pion_valide :
                     msgs += f"La case {depart.upper()} ne contient pas un pion à"
@@ -222,7 +224,7 @@ class Jeu:
             # on envoie le texte 
             self.affiche(msgs)
             msgs = ""            
-            arrivee = input("> ")
+            arrivee =  self.prompt(self.__nomJoueur__(self.__joueurCourant))
 
             # arrivé a un ou plusieurs pions pour un enchainement de bouffage de pions
             # on met la liste des cases où sera le pion dans un tab

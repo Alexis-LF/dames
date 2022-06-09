@@ -38,7 +38,7 @@ async def prompt(joueur : str):
   return input(f"{joueur} > ")
 
 if __name__ == "__main__":
-    jeu = Jeu(affiche)
+    jeu = Jeu(affiche,prompt)
     print("commencement du jeu de dames !")
     jeu.chargementJeu()
     # jeu.nouvellePartie("1 essai","1 essai prime")

@@ -36,7 +36,7 @@ async def dames(ctx, Arg = None):
         **Jeu des dames**
         """
     )
-    jeu = Jeu(affiche,message_a_edit)
+    jeu = Jeu(affiche,prompt,message_a_edit)
     print("commencement du jeu de dames !")
     jeu.chargementJeu()
     jeu.commenceJeu()
