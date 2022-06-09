@@ -86,17 +86,19 @@ class Plateau:
         else:
             print("ERREUR INTERNE dans decrementePions")
 
-    def affiche(self):
+    def affiche(self) -> str:
+        txt = str()
         nb_cases = 0
-        print("   1 2 3 4 5 6 7 8 9 10")
+        txt += "  1 2 3 4 5 6 7 8 9 10\n"
         for case in self.__cases:
             nb_cases+=1
             if ((nb_cases-1)%10) == 0:
-                print(self.__lignes[(int)(nb_cases/10)],end=" ")            
-            print(case.affiche(),end="")
+                txt += f"{self.__lignes[(int)(nb_cases/10)]}"
+            txt += f"{case.affiche()}"
             if (nb_cases%10) == 0:
-                print("",end="\n")
-        self.affichePionsRestants()
+                txt += "\n"
+        txt += self.affichePionsRestants()
+        return txt
     
     def sauvegarde(self) -> str:
         lignes = ""
@@ -109,26 +111,17 @@ class Plateau:
         return lignes
 
         
-    def affichePionsRestants(self):
+    def affichePionsRestants(self) -> str:
+        txt = str()
         pionAffiche = Pion(1)    
-        print("\t",end="")
-        print(pionAffiche.affiche(),end="")
-        print(f" = {self.__nbPionsJ1}")
-        print("\t",end="")
+        txt += "\t"
+        txt += f"{pionAffiche.affiche()}"
+        txt += f" = {self.__nbPionsJ1}\n"
+        txt += "\t"
         pionAffiche.setJoueur(2)
-        print(pionAffiche.affiche(),end="")
-        print(f" = {self.__nbPionsJ2}")
-
-    def afficheLigne(self,ligne : str):
-        for case in self.__cases:
-            if case.getPosX() == ligne:
-                case.affiche()
-        print("",end="\n")
-
-    def afficheCol(self, col : int):
-        for case in self.__cases:
-            if case.getPosY() == col:
-                case.affiche()
+        txt += f"{pionAffiche.affiche()}"
+        txt += f" = {self.__nbPionsJ2}\n"
+        return txt
 
     def getCaseId(self,coords : str) -> int:
         if len(coords) < 2 or len(coords) > 3:
@@ -145,10 +138,10 @@ class Plateau:
             return False
         # vérification que c'est bien dans le tableau
         if ligne not in self.__lignes:
-            print(f"ligne {ligne} hors tableau")
+            # print(f"ligne {ligne} hors tableau")
             return False
         if col not in range(1,11):
-            print(f"colonne {col} hors tableau")
+            # print(f"colonne {col} hors tableau")
             return False        
         # on détermine l'id par le n° de col/ligne
         numLigne = self.__lignes.find(ligne)
@@ -174,7 +167,7 @@ class Plateau:
         indexH2 = self.__lignes.find(case2.getPosX())
         nb_cases = abs(indexV1 - indexV2)
         if abs(indexH1-indexH2) != nb_cases:
-            print("Le déplacement n'est pas en diagonale")
+            # print("Le déplacement n'est pas en diagonale")
             return []
         # on génère les coordonnées des cases à récup
         sensH = indexH2 > indexH1
