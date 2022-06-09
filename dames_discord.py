@@ -20,7 +20,7 @@ async def prompt(joueur : str):
     channelBon = msgDiscord.channel == ctx.channel
     bonJoueur = msgDiscord.author.nick = joueur
     if channelBon and bonJoueur:
-        msg = msgDiscord.content
+        msg = msgDiscord.content.strip()
         await msgDiscord.delete()
         return msg
 
