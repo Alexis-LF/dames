@@ -35,8 +35,8 @@ class Jeu:
 
         self.__savesDir = "sauvegardes"
 
-        self.__strDep1 = "Pion à déplacer de joueur X :"
-        self.__strDep2 = "case(s) de destination de joueur X :"
+        self.__strDep1 = "Pion *à déplacer* de **joueur X** :"
+        self.__strDep2 = "case(s) de *destination* de **joueur X** :"
 
 
         self.affiche("Initialisation du plateau")
@@ -114,7 +114,7 @@ class Jeu:
         choix = 0
         while choix == 0:
             index = 0
-            self.affiche("Liste des sauvegardes")
+            a_print += "Liste des sauvegardes:\n```"
             for saveName in listSaves:
                 with open(f"{self.__savesDir}/{saveName}","r") as saveFic:
                     parametres = dict()
@@ -126,9 +126,10 @@ class Jeu:
                     a_print += "{0}:\t{1} contre {2} enregistrée {3}à {4}\n".format(index+1,parametres['joueur1'],parametres['joueur2'],"automatiquement " if parametres['typeSauvegarde'] == "auto" else "", parametres['datetime'])
                     index +=1
                 # self.affiche("\n")
-            a_print += f"Total : {index} sauvegardes"
+            a_print += f"```Total : {index} sauvegardes\n"
+            a_print += f"Choissez une sauvegarde :\n"
             self.affiche(a_print)
-            choix = int(input("choisissez une sauvegarde >"))
+            choix = int(input("> "))
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
@@ -194,10 +195,11 @@ class Jeu:
         deplacement_valide = 0 # false = 0
         while deplacement_valide == 0:
             listDplcmt = []
-            msgs = f"{self.__plateau.affiche()}\n" + msgs
-            msgs += f"au tour de {self.__nomJoueur__(self.__joueurCourant)} le joueur {self.__joueurCourant}\n"
+
             pion_valide = False
             while pion_valide == False:
+                msgs = f"{self.__plateau.affiche()}\n" + msgs
+                msgs += f"au tour de {self.__nomJoueur__(self.__joueurCourant)} le joueur {self.__joueurCourant}\n"
                 # départ de tel pion
                 msgs += f'{self.__strDep1.replace("joueur X",self.__nomJoueur__(self.__joueurCourant))}\n'
                 # on envoie le texte à afficher
@@ -205,6 +207,8 @@ class Jeu:
                 msgs = ""
                 depart = input("> ")
                 pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
+                if not pion_valide :
+                    msgs += f"La case {depart.upper()} ne contient pas un pion à"
             # récupération, sélection du pion et affichage
             pion = self.__plateau.getCase(depart).getPion()
             self.__plateau.getCase(depart).getPion().setSelect(True)
