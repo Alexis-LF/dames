@@ -15,9 +15,10 @@ import nest_asyncio
 class Jeu:
     """classe Jeu"""
 
-    def __init__(self,fx_affiche,ctx_discord):
+    def __init__(self,fx_affiche,ctx_discord = None):
         """initialisations :"""
-        nest_asyncio.apply()
+        if ctx_discord != None:
+            nest_asyncio.apply()
         self.__affiche_externe = fx_affiche
         self.__ctx_discord = ctx_discord
 
@@ -42,9 +43,12 @@ class Jeu:
         self.__plateau = None
 
     def affiche(self,msg):
-        loop = asyncio.get_event_loop()
-        coroutine  = self.__affiche_externe(msg,self.__ctx_discord)
-        loop.run_until_complete(coroutine)
+        if self.__ctx_discord != None:
+            loop = asyncio.get_event_loop()
+            coroutine  = self.__affiche_externe(msg,self.__ctx_discord)
+            loop.run_until_complete(coroutine)
+        else:
+            self.__affiche_externe(msg)
 
         
 
