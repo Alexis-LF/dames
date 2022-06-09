@@ -35,8 +35,8 @@ class Jeu:
 
         self.__savesDir = "sauvegardes"
 
-        self.__strDep1 = "Pion à déplacer de joueur X >"
-        self.__strDep2 = "case(s) de destination de joueur X >"
+        self.__strDep1 = "Pion à déplacer de joueur X :"
+        self.__strDep2 = "case(s) de destination de joueur X :"
 
 
         self.affiche("Initialisation du plateau")
@@ -194,23 +194,29 @@ class Jeu:
         deplacement_valide = 0 # false = 0
         while deplacement_valide == 0:
             listDplcmt = []
-            self.__plateau.affiche()
+            msgs = f"{self.__plateau.affiche()}\n" + msgs
             msgs += f"au tour de {self.__nomJoueur__(self.__joueurCourant)} le joueur {self.__joueurCourant}\n"
-            self.affiche(msgs)
-            msgs = ""
             pion_valide = False
             while pion_valide == False:
                 # départ de tel pion
-                depart = input(self.__strDep1.replace("joueur X",self.__nomJoueur__(self.__joueurCourant)))
+                msgs += f'{self.__strDep1.replace("joueur X",self.__nomJoueur__(self.__joueurCourant))}\n'
+                # on envoie le texte à afficher
+                self.affiche(msgs)
+                msgs = ""
+                depart = input("> ")
                 pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
             # récupération, sélection du pion et affichage
             pion = self.__plateau.getCase(depart).getPion()
             self.__plateau.getCase(depart).getPion().setSelect(True)
-            self.__plateau.affiche()
             
-            # arrivé à un ou plusieurs pions pour un enchainement de bouffage de pions
-            arrivee = input(self.__strDep2.replace("joueur X",self.__nomJoueur__(self.__joueurCourant)))
+            msgs += f"{self.__plateau.affiche()}\n"
+            msgs += f'{self.__strDep2.replace("joueur X",self.__nomJoueur__(self.__joueurCourant))}\n'
+            # on envoie le texte 
+            self.affiche(msgs)
+            msgs = ""            
+            arrivee = input("> ")
 
+            # arrivé a un ou plusieurs pions pour un enchainement de bouffage de pions
             # on met la liste des cases où sera le pion dans un tab
             listDplcmt.append(depart)
             listDplcmt += arrivee.split(",")
