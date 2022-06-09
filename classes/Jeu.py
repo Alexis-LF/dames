@@ -142,6 +142,7 @@ class Jeu:
             self.affiche(a_print)
             choix = self.prompt()
             choix = int(choix)
+            print(f"choix n°{choix} de partie faite : chargelent de {listSaves[choix-1]} ")
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
