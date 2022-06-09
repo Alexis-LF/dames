@@ -6,7 +6,7 @@ from types import coroutine
 from unittest import result
 from classes.Plateau import Plateau
 from datetime import datetime
-from os import listdir
+from os import listdir,rename
 import asyncio
 import nest_asyncio
 
@@ -114,6 +114,9 @@ class Jeu:
         choix = 0
         while choix == 0:
             index = 0
+            for saveName in listSaves:
+                if saveName.find("Fini :") == 0:
+                    listSaves.remove(saveName)
             a_print += "Liste des sauvegardes:\n```"
             for saveName in listSaves:
                 with open(f"{self.__savesDir}/{saveName}","r") as saveFic:
@@ -181,6 +184,7 @@ class Jeu:
             finPartie = self.__finPartie__()
         
         self.affiche("fin du jeu !")
+        rename(f"Auto : {self.__joueur1} VS {self.__joueur2}.txt",f"Fini : {self.__joueur1} VS {self.__joueur2}.txt")
         if finPartie == 3:
             self.affiche(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
         else:
