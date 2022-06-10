@@ -151,7 +151,7 @@ class Jeu:
             self.affiche(a_print)
             choix = self.prompt()
             choix = int(choix)
-            print(f"choix n°{choix} de partie faite : chargelent de {listSaves[choix-1]} ")
+            print(f"choix n°{choix} de partie faite : chargement de {listSaves[choix-1]} ")
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
@@ -191,10 +191,14 @@ class Jeu:
         messages = str()
         while(finPartie == 0):
             nbManges , messages = self.__tour__(messages)
-            self.sauvegardeJeu(f"Auto : {self.__joueur1} VS {self.__joueur2}.txt",auto=True)
             # vérification si le jeu est coupé
-            if messages.find(self.__flagExitGame) != -1 :        
+            if messages.find(self.__flagExitGame) != -1 :
+                # pour assurer de conserver le bon joueur à la reprise
+                self.__joueurSuivant__()
+                self.sauvegardeJeu(f"Auto : {self.__joueur1} VS {self.__joueur2}.txt",auto=True)
                 return
+            self.sauvegardeJeu(f"Auto : {self.__joueur1} VS {self.__joueur2}.txt",auto=True)
+
             self.__nbTours += 1
             if nbManges > 0:
                 self.__nbToursSansMange = 0
@@ -238,7 +242,7 @@ class Jeu:
 
                 pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
                 if not pion_valide :
-                    msgs += f"La case {depart.upper()} ne contient pas un pion à"
+                    msgs += f"La case {depart.upper()} ne contient pas un pion !\n"
             # récupération, sélection du pion et affichage
             pion = self.__plateau.getCase(depart).getPion()
             self.__plateau.getCase(depart).getPion().setSelect(True)
@@ -258,8 +262,8 @@ class Jeu:
             # on met la liste des cases où sera le pion dans un tab
             listDplcmt.append(depart)
             listDplcmt += arrivee.split(",")
-            print(arrivee)
-            print(listDplcmt)
+            # print(arrivee)
+            # print(listDplcmt)
 
 
             for i in range (0,len(listDplcmt)-1):
