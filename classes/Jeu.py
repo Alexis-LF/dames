@@ -240,7 +240,7 @@ class Jeu:
                 if depart == self.__flagExitGame:
                     return 0, depart
 
-                pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
+                pion_valide = self.__plateau.pionAuJoueur(depart,self.__joueurCourant)
                 if not pion_valide :
                     msgs += f"La case {depart.upper()} ne contient pas un pion !\n"
             # récupération, sélection du pion et affichage

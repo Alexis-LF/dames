@@ -155,7 +155,7 @@ class Plateau:
         return self.__cases[self.getCaseId(coords)]
 
 
-    def PionAuJoueur(self,coords : str, joueur : int) -> bool:
+    def pionAuJoueur(self,coords : str, joueur : int) -> bool:
         case = self.getCase(coords)
         if case != False :
             return case.estAuJoueur(joueur)
