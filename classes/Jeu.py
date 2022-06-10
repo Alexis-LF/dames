@@ -39,9 +39,11 @@ class Jeu:
 
         self.__savesDir = "sauvegardes"
 
-        self.__strDep1 = "Pion *à déplacer* de **joueur X** :"
-        self.__strDep2 = "case(s) de *destination* de **joueur X** :"
+        self.__strDep1 = "Pion *à déplacer* de **joueur X**  :\n*exit pour arrêter la partie*"
+        self.__strDep2 = "case(s) de *destination* de **joueur X** :\n*exit pour arrêter la partie*"
 
+        self.__flagExitGame = "EXIT_GAME_FLAG"
+        self.__motCleExitGame = "exit"
 
         self.affiche("Initialisation du plateau")
         self.__plateau = None
@@ -55,12 +57,16 @@ class Jeu:
             self.__affiche_externe(msg)
 
     def prompt(self,joueur : str = False):
+        valueReceived = ""
         if self.__bot_context != None:
             loop = asyncio.get_event_loop()
             coroutine  = self.__prompt_externe(self.__bot_context,joueur)
-            return loop.run_until_complete(coroutine)
+            valueReceived = loop.run_until_complete(coroutine)
         else:
-            return self.__prompt_externe(joueur)        
+            valueReceived = self.__prompt_externe(joueur)
+        if valueReceived.lower().find(self.__motCleExitGame) != -1:
+            return self.__flagExitGame
+        return valueReceived
         
 
     def nouvellePartie(self,nomJ1 : str,nomJ2 : str):
@@ -186,6 +192,9 @@ class Jeu:
         while(finPartie == 0):
             nbManges , messages = self.__tour__(messages)
             self.sauvegardeJeu(f"Auto : {self.__joueur1} VS {self.__joueur2}.txt",auto=True)
+            # vérification si le jeu est coupé
+            if messages.find(self.__flagExitGame) != -1 :        
+                return
             self.__nbTours += 1
             if nbManges > 0:
                 self.__nbToursSansMange = 0
@@ -223,6 +232,9 @@ class Jeu:
                 self.affiche(msgs)
                 msgs = ""
                 depart = self.prompt(self.__nomJoueur__(self.__joueurCourant))
+                # couper le jeu
+                if depart == self.__flagExitGame:
+                    return 0, depart
 
                 pion_valide = self.__plateau.PionAuJoueur(depart,self.__joueurCourant)
                 if not pion_valide :
@@ -237,6 +249,10 @@ class Jeu:
             self.affiche(msgs)
             msgs = ""            
             arrivee =  self.prompt(self.__nomJoueur__(self.__joueurCourant))
+            # couper le jeu
+            if arrivee == self.__flagExitGame:
+                return 0, arrivee
+
 
             # arrivé a un ou plusieurs pions pour un enchainement de bouffage de pions
             # on met la liste des cases où sera le pion dans un tab
