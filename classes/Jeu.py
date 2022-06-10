@@ -15,13 +15,16 @@ import nest_asyncio
 class Jeu:
     """classe Jeu"""
 
-    def __init__(self,fx_affiche,fx_prompt,ctx_discord = None):
+    def __init__(self,fx_affiche,fx_prompt,msg_context = None, bot_context = None):
         """initialisations :"""
-        if ctx_discord != None:
+        self.__msg_context = None
+        self.__bot_context = None
+        if msg_context != None and bot_context != None:
             nest_asyncio.apply()
+            self.__msg_context = msg_context
+            self.__bot_context = bot_context
         self.__affiche_externe = fx_affiche
         self.__prompt_externe = fx_prompt
-        self.__ctx_discord = ctx_discord
 
         self.__nbTours = 0
         self.__nbToursSansMange = 0
@@ -44,17 +47,17 @@ class Jeu:
         self.__plateau = None
 
     def affiche(self,msg):
-        if self.__ctx_discord != None:
+        if self.__msg_context != None:
             loop = asyncio.get_event_loop()
-            coroutine  = self.__affiche_externe(msg,self.__ctx_discord)
+            coroutine  = self.__affiche_externe(msg,self.__msg_context)
             loop.run_until_complete(coroutine)
         else:
             self.__affiche_externe(msg)
 
     def prompt(self,joueur : str = False):
-        if self.__ctx_discord != None:
+        if self.__bot_context != None:
             loop = asyncio.get_event_loop()
-            coroutine  = self.__prompt_externe(joueur)
+            coroutine  = self.__prompt_externe(self.__bot_context,joueur)
             return loop.run_until_complete(coroutine)
         else:
             return self.__prompt_externe(joueur)        
@@ -244,7 +247,6 @@ class Jeu:
 
 
             for i in range (0,len(listDplcmt)-1):
-                self.affiche(f"dans Jeu.py/__tour()__, i de test de dplcmt valide : i = {i}. Test avec {listDplcmt[i]} et {listDplcmt[i+1]}")
                 deplacement_valide, msg = self.__plateau.deplacementValide([listDplcmt[i],listDplcmt[i+1]],self.__joueurCourant, pion)
                 msgs += f"{msg}\n"
                 if deplacement_valide == 1 and len(listDplcmt) > 2:
