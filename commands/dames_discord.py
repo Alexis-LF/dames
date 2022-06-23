@@ -61,8 +61,8 @@ async def dames(ctx, Arg = None):
     messageAEdit = await ctx.channel.send(msgAccueil)
     if Arg == "load" or Arg == "reprendre" :
         jeu = Jeu(affiche,prompt,messageAEdit,ctx)
-        jeu.chargementJeu()
-        jeu.commenceJeu()
+        await jeu.chargementJeu()
+        await jeu.commenceJeu()
         await ctx.channel.send("Fin du programme")
     elif Arg == "new" or Arg == "nouveau" :
         j1 = None

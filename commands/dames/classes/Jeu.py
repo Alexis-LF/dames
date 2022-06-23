@@ -44,23 +44,19 @@ class Jeu:
         self.__flagExitGame = "EXIT_GAME_FLAG"
         self.__motCleExitGame = "exit"
 
-        self.affiche("Initialisation du plateau")
+        # await self.affiche("Initialisation du plateau")
         self.__plateau = None
 
-    def affiche(self,msg):
+    async def affiche(self,msg):
         if self.__msgContext != None:
-            loop = asyncio.get_event_loop()
-            coroutine  = self.__afficheExterne(msg,self.__msgContext)
-            loop.run_until_complete(coroutine)
+            await self.__afficheExterne(msg,self.__msgContext)
         else:
             self.__afficheExterne(msg)
 
-    def prompt(self,joueur : str = False):
+    async def prompt(self,joueur : str = False):
         valueReceived = ""
         if self.__botContext != None:
-            loop = asyncio.get_event_loop()
-            coroutine  = self.__promptExterne(self.__botContext,joueur)
-            valueReceived = loop.run_until_complete(coroutine)
+            await self.__promptExterne(self.__botContext,joueur)
         else:
             valueReceived = self.__promptExterne(joueur)
         if valueReceived.lower().find(self.__motCleExitGame) != -1:
@@ -80,12 +76,12 @@ class Jeu:
             self.__joueurSuivant__()
 
 
-    def chargementJeu(self):
+    async def chargementJeu(self):
         line = str()
         plateauData : list[str] = list()
         parametres = dict()
         # l'utilisateur choisit la partie désirée
-        fileName = self.choixChargement()
+        fileName = await self.choixChargement()
         # ouverture de la sauvegarde choisie
         fp = open(f"{self.__savesDir}/{fileName}",'r')
         # on récupère les infos de la partie
@@ -105,7 +101,7 @@ class Jeu:
             plateauData.append(fp.readline())
 
         self.__plateau = Plateau(plateauData)
-        self.affiche("Partie restaurée")
+        await self.affiche("Partie restaurée")
 
 
     def sauvegardeJeu(self,filename : str,auto : bool = False):
@@ -124,7 +120,7 @@ class Jeu:
         fp.write(self.__plateau.sauvegarde())
         fp.close()
 
-    def choixChargement(self) -> str:
+    async def choixChargement(self) -> str:
         listSaves = listdir(self.__savesDir)
         aPrint = ""
         choix = 0
@@ -147,8 +143,8 @@ class Jeu:
                 # self.affiche("\n")
             aPrint += f"```Total : {index} sauvegardes\n"
             aPrint += f"Choissez une sauvegarde :\n"
-            self.affiche(aPrint)
-            choix = self.prompt()
+            await self.affiche(aPrint)
+            choix = await self.prompt()
             choix = int(choix)
             print(f"choix n°{choix} de partie faite : chargement de {listSaves[choix-1]} ")
         return f"{listSaves[choix-1]}"
@@ -185,11 +181,11 @@ class Jeu:
         else:
             return 0
 
-    def commenceJeu(self):
+    async def commenceJeu(self):
         finPartie = 0
         messages = str()
         while(finPartie == 0):
-            nbManges , messages = self.__tour__(messages)
+            nbManges , messages = await self.__tour__(messages)
             # vérification si le jeu est coupé
             if messages.find(self.__flagExitGame) != -1 :
                 # pour assurer de conserver le bon joueur à la reprise
@@ -208,15 +204,15 @@ class Jeu:
             self.__joueurSuivant__()
             finPartie = self.__finPartie__()
         
-        self.affiche("fin du jeu !")
+        await self.affiche("fin du jeu !")
         rename(f"Auto : {self.__joueur1} VS {self.__joueur2}.txt",f"Fini : {self.__joueur1} VS {self.__joueur2}.txt")
         if finPartie == 3:
-            self.affiche(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
+            await self.affiche(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
         else:
-            self.affiche(f"Victoire de {self.__nomJoueur__(self.__joueurCourant)} !")
+            await self.affiche(f"Victoire de {self.__nomJoueur__(self.__joueurCourant)} !")
 
     
-    def __tour__(self,msgs):
+    async def __tour__(self,msgs):
         nbManges = 0
         depart = str()
         arrivee = str()
@@ -232,9 +228,9 @@ class Jeu:
                 # départ de tel pion
                 msgs += f'{self.__strDep1.replace("joueur X",self.__nomJoueur__(self.__joueurCourant))}\n'
                 # on envoie le texte à afficher
-                self.affiche(msgs)
+                await self.affiche(msgs)
                 msgs = ""
-                depart = self.prompt(self.__nomJoueur__(self.__joueurCourant))
+                depart = await self.prompt(self.__nomJoueur__(self.__joueurCourant))
                 # couper le jeu
                 if depart == self.__flagExitGame:
                     return 0, depart
@@ -249,9 +245,9 @@ class Jeu:
             msgs += f"{self.__plateau.affiche()}\n"
             msgs += f'{self.__strDep2.replace("joueur X",self.__nomJoueur__(self.__joueurCourant))}\n'
             # on envoie le texte 
-            self.affiche(msgs)
+            await self.affiche(msgs)
             msgs = ""            
-            arrivee =  self.prompt(self.__nomJoueur__(self.__joueurCourant))
+            arrivee =  await self.prompt(self.__nomJoueur__(self.__joueurCourant))
             # couper le jeu
             if arrivee == self.__flagExitGame:
                 return 0, arrivee
