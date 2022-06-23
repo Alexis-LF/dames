@@ -145,8 +145,13 @@ class Jeu:
             aPrint += f"Choissez une sauvegarde :\n"
             await self.affiche(aPrint)
             choix = await self.prompt()
-            choix = int(choix)
-            print(f"choix n°{choix} de partie faite : chargement de {listSaves[choix-1]} ")
+            try:
+                choix = int(choix)
+            except ValueError:
+                print(f"DÉBUG :\n\tLe choix de partie vaut \"{choix}\"")
+                choix = 0
+            else:
+                print(f"choix n°{choix} de partie faite : chargement de {listSaves[choix-1]} ")
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
