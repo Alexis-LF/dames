@@ -34,7 +34,7 @@ async def prompt(ctx,joueur : str = None, getNickname : bool = False) -> str:
     print("ERREUR INTERNE : dans prompt") 
 
 @bot.command(aliases = ["dame"])
-async def dames(ctx, Arg = None):
+async def dames(ctx, *argsTuple):
     argLoad = ["load", "reprendre"]
     argNew = ["new", "nouveau"]
 
@@ -58,19 +58,23 @@ async def dames(ctx, Arg = None):
         """
     await ctx.channel.send(msgAccueil + regles)
     messageAEdit = await ctx.channel.send("Sortie du jeu de dames de son carton...")
-
-    if not Arg:
+    if len(argsTuple) == 0:
+        choixDuJeu = None
+    else:
+        args = list(argsTuple)
+        choixDuJeu = args.pop(0)
+    if not choixDuJeu:
         await affiche(f"** **",messageAEdit)
         return
 
-    if Arg not in (argLoad + argNew):
-        await affiche(f"Vous avez tapé : `/dames {Arg}`, ça ne permet pas de lancer le jeu",messageAEdit)
+    if choixDuJeu not in (argLoad + argNew):
+        await affiche(f"Vous avez tapé : `/dames {choixDuJeu}`, ça ne permet pas de lancer le jeu",messageAEdit)
     else:
-        jeu = Jeu(affiche,prompt,messageAEdit,ctx)
-        if Arg in argLoad :
+        jeu = Jeu(affiche,prompt,messageAEdit,ctx,args)
+        if choixDuJeu in argLoad :
             if await jeu.chargementJeu():
                 await jeu.commenceJeu()
-        elif Arg in argNew :
+        elif choixDuJeu in argNew :
             j1 = None
             j2 = None
             await affiche("joueur 1, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
@@ -80,6 +84,6 @@ async def dames(ctx, Arg = None):
             jeu.nouvellePartie(j1,j2)
             await jeu.commenceJeu()
         else:
-            await affiche(f"MON CODE EST BOURRÉ : Problème de reconnaissance de l'arguement {Arg} ",messageAEdit)
+            await affiche(f"MON CODE EST BOURRÉ : Problème de reconnaissance de l'arguement {choixDuJeu} ",messageAEdit)
         await ctx.channel.send("Le jeu de dames est rangé.")
     

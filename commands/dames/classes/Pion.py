@@ -1,22 +1,29 @@
 class Pion:
     """classe Pion"""
 
-    def __init__(self,joueur : int = 0):
+    def __init__(self,joueur : int = 0, lstEmojis : list[str] = None):
         """initialisations :"""        
         self.__dame = False
         self.__select = False
         self.__joueur = joueur
 
-        self.__j2PionAff = "⚫"
         self.__j2PionFic = "y"
-        self.__j2DameAff = "🖤"
         self.__j2DameFic = "Y"
-        self.__j1PionAff = "⚪"
         self.__j1PionFic = "x"
-        self.__j1DameAff = "🤍"
         self.__j1DameFic = "X"
-        self.__selectPionAff = "🔵"
-        self.__selectDameAff = "💙"
+
+        if lstEmojis != None:
+            self.setAff(lstEmojis)
+        else:
+            self.setAff([])
+
+    def setAff(self,lstEmojis : list[str]):
+        self.__j1PionAff = lstEmojis[0] if len(lstEmojis) >= 1 else "⚪"
+        self.__j2PionAff = lstEmojis[1] if len(lstEmojis) >= 2 else "⚫"
+        self.__selectPionAff = lstEmojis[2] if len(lstEmojis) >= 3 else "🔵"
+        self.__j1DameAff = lstEmojis[3] if len(lstEmojis) >= 4 else "🤍"
+        self.__j2DameAff = lstEmojis[4] if len(lstEmojis) >= 5 else "🖤"
+        self.__selectDameAff = lstEmojis[5] if len(lstEmojis) >= 6 else "💙"
 
     def estDame(self) -> bool:
         return self.__dame

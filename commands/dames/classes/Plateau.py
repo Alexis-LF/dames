@@ -8,17 +8,36 @@ class Plateau:
     """classe Plateau"""
 
 
-    def __init__(self,fileName = False) :
+    def __init__(self,fileName = False, lstEmojis: list[str] = None) :
         self.__lignes = "ABCDEFGHIJ"
         self.__nbPionsJ1 = 20
         self.__nbPionsJ2 = 20
+        self.__bloc = "```"
+        if lstEmojis != False:
+            self.__bloc = ""
 
         self.__cases = self.__initCases__()
+        self.__emojis = self.getEmojis(lstEmojis)
         if fileName :
             self.__initPionsSauvegarde__(fileName)
         else:
             self.__initPions__()
-    
+
+
+    # remplacer à quoi ressemble les pions
+    # dans l'ordre : pionJ1 , pionJ2 , pionSelect, dameJ1, dameJ2 dameSelect
+    def getEmojis(self,emojis: list) -> list[str]:
+        # on enregistre les émojis valides
+        emojisChecked = list()
+        if len(emojis) == 0:
+            return
+        for emoji in emojis :
+            if len(emoji) == 1 or (emoji[0] == ":" and emoji[-1] == ":"):
+                emojisChecked.append(emoji)
+        if len(emojisChecked) == 0:
+            return
+        # on établi le tableau d'émoji et on complète les manquants avec ceux par défaut
+        return emojisChecked
 
     def __initCases__(self) -> list[Case]:
         cases = []
@@ -41,6 +60,7 @@ class Plateau:
         while(nbPions<self.__nbPionsJ2):
             if not self.__cases[i].estClaire():
                 self.__cases[i].setPion(Pion(2))
+                self.__cases[i].getPion().setAff(self.__emojis)
                 nbPions+=1
             i+=1
         # placement des pions foncés du joueur 1
@@ -49,7 +69,7 @@ class Plateau:
         length = len(self.__cases) -1
         while(nbPions<self.__nbPionsJ1):
             if not self.__cases[length-i].estClaire():
-                self.__cases[length-i].setPion(Pion(1))
+                self.__cases[length-i].setPion(Pion(1,self.__emojis ))
                 nbPions+=1
             i+=1
     
@@ -89,7 +109,7 @@ class Plateau:
     def affiche(self) -> str:
         txt = str()
         nbCases = 0
-        txt += "```"
+        txt += f"{self.__bloc}"
         txt += "  1 2 3 4 5 6 7 8 9 10\n"
         for case in self.__cases:
             nbCases+=1
@@ -99,7 +119,7 @@ class Plateau:
             if (nbCases%10) == 0:
                 txt += "\n"
         txt += self.affichePionsRestants()
-        txt += "```"
+        txt += f"{self.__bloc}"
         return txt
     
     def sauvegarde(self) -> str:

@@ -14,7 +14,7 @@ from os import listdir,rename
 class Jeu:
     """classe Jeu"""
 
-    def __init__(self,fxAffiche,fxPrompt,msgContext = None, botContext = None):
+    def __init__(self,fxAffiche,fxPrompt,msgContext = None, botContext = None, emojis = list()):
         """initialisations :"""
         self.__msgContext = None
         self.__botContext = None
@@ -23,6 +23,7 @@ class Jeu:
             self.__botContext = botContext
         self.__afficheExterne = fxAffiche
         self.__promptExterne = fxPrompt
+        self.__emojis = emojis
 
         self.__nbTours = 0
         self.__nbToursSansMange = 0
@@ -42,13 +43,12 @@ class Jeu:
         self.__savesDir = "commands/dames_files/sauvegardes"
         self.__strDep1 = "Pion *à déplacer* de **joueur X**  :\n*exit pour arrêter la partie*"
         self.__strDep2 = "case(s) de *destination* de **joueur X** :\n*exit pour arrêter la partie*"
-
         self.__flagExitGame = "EXIT_GAME_FLAG"
         self.__motCleExitGame = "exit"
 
         # await self.affiche("Initialisation du plateau")
         self.__plateau = None
-
+            
     async def affiche(self,msg):
         if self.__msgContext != None:
             await self.__afficheExterne(msg,self.__msgContext)
@@ -69,7 +69,7 @@ class Jeu:
     def nouvellePartie(self,nomJ1 : str,nomJ2 : str):
         self.__joueur1 = nomJ1
         self.__joueur2 = nomJ2
-        self.__plateau = Plateau()
+        self.__plateau = Plateau(lstEmojis=self.__emojis)
 
 
     # on inverse le joueur courant initalement à 1 par défaut
@@ -104,7 +104,7 @@ class Jeu:
         for _ in range(0,10):
             plateauData.append(fp.readline())
 
-        self.__plateau = Plateau(plateauData)
+        self.__plateau = Plateau(plateauData,lstEmojis=self.__emojis)
         await self.affiche("Partie restaurée")
         return True
 
