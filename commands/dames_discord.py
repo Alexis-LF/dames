@@ -36,7 +36,7 @@ async def identification(ctx) -> str:
         bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
         if bonChannel and bonJoueur:
             joueur = msgDiscord.author.display_name
-            print(f"joueur {joueur} qui a envoyé \"{msgDiscord.content}\"")
+            # print(f"joueur {joueur} qui a envoyé \"{msgDiscord.content}\"")
             await msgDiscord.delete()
             return joueur
     print("ERREUR INTERNE : dans identification")    
@@ -50,7 +50,6 @@ async def dames(ctx, Arg = None):
         **Jeu des dames** version **bêta**
         **Liste des bugs:**```
          - S'il vous reste plus qu'un pion et qu'il ne peut pas bouger : la partie est bloquée```
-         - On peut `/dames load` une partie finie, ce qui ne doit pas être le cas
         *Si vous constatez des bugs: allez raler auprès d'Alexis*
         """
     regles = f"""
@@ -87,7 +86,7 @@ async def dames(ctx, Arg = None):
             await affiche("joueur 2, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
             j2 = await identification(ctx)
             jeu.nouvellePartie(j1,j2)
-            jeu.commenceJeu()
+            await jeu.commenceJeu()
         else:
             await affiche(f"MON CODE EST BOURRÉ : Problème de reconnaissance de l'arguement {Arg} ",messageAEdit)
         await ctx.channel.send("Le jeu de dame est rangé.")
