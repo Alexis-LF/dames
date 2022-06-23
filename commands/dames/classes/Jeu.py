@@ -37,7 +37,6 @@ class Jeu:
         self.__joueur2 = "joueur 2"
 
         self.__savesDir = "commands/dames_files/sauvegardes"
-
         self.__strDep1 = "Pion *à déplacer* de **joueur X**  :\n*exit pour arrêter la partie*"
         self.__strDep2 = "case(s) de *destination* de **joueur X** :\n*exit pour arrêter la partie*"
 
@@ -76,12 +75,14 @@ class Jeu:
             self.__joueurSuivant__()
 
 
-    async def chargementJeu(self):
+    async def chargementJeu(self) -> bool :
         line = str()
         plateauData : list[str] = list()
         parametres = dict()
         # l'utilisateur choisit la partie désirée
         fileName = await self.choixChargement()
+        if fileName == self.__flagExitGame:
+            return False
         # ouverture de la sauvegarde choisie
         fp = open(f"{self.__savesDir}/{fileName}",'r')
         # on récupère les infos de la partie
@@ -102,6 +103,7 @@ class Jeu:
 
         self.__plateau = Plateau(plateauData)
         await self.affiche("Partie restaurée")
+        return True
 
 
     def sauvegardeJeu(self,filename : str,auto : bool = False):
@@ -142,17 +144,22 @@ class Jeu:
                     index +=1
                 # self.affiche("\n")
             aPrint += f"```Total : {index} sauvegardes\n"
-            aPrint += f"Choissez une sauvegarde :\n"
+            aPrint += f"Choissez une sauvegarde :\n*exit pour quitter*"
             await self.affiche(aPrint)
             aPrint = ""
             choix = await self.prompt()
+            if choix == self.__flagExitGame :
+                return choix
             try:
                 choix = int(choix)
+                if (choix-1) > len(listSaves):
+                    raise ValueError
             except ValueError:
-                print(f"DÉBUG :\n\tLe choix de partie vaut \"{choix}\"")
+                # print(f"DÉBUG :\n\tLe choix de partie vaut \"{choix}\"")
                 choix = 0
             else:
-                print(f"choix n°{choix} de partie faite : chargement de {listSaves[choix-1]} ")
+                # print(f"choix n°{choix} de partie faite : chargement de {listSaves[choix-1]} ")
+                pass
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
@@ -209,14 +216,16 @@ class Jeu:
             
             self.__joueurSuivant__()
             finPartie = self.__finPartie__()
-        
-        await self.affiche("fin du jeu !")
-        rename(f"Auto : {self.__joueur1} VS {self.__joueur2}.txt",f"Fini : {self.__joueur1} VS {self.__joueur2}.txt")
-        if finPartie == 3:
-            await self.affiche(f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours")
-        else:
-            await self.affiche(f"Victoire de {self.__nomJoueur__(self.__joueurCourant)} !")
 
+        # fin du jeu
+        rename(f"{self.__savesDir}/Auto : {self.__joueur1} VS {self.__joueur2}.txt",f"{self.__savesDir}/Fini : {self.__joueur1} VS {self.__joueur2}.txt")
+        msg = f"{self.__plateau.affiche()}"
+        msg += "fin du jeu : "
+        if finPartie == 3:
+            msg += f"Égalité ! la partie n'a pas progressé pendant {self.__nbToursMaxSansMange} tours"
+        else:
+            msg += f"Victoire de **{self.__nomJoueur__(self.__joueurCourant)}** !"
+        await self.affiche(msg)
     
     async def __tour__(self,msgs):
         nbManges = 0
