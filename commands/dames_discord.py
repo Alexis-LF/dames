@@ -10,9 +10,7 @@ async def prompt(ctx,joueur : str = False):
     while (not bonChannel) or (not bonJoueur) :
         bonChannel = False
         bonJoueur = False        
-        loop = asyncio.get_event_loop()
-        coroutine  = bot.wait_for("message")
-        msgDiscord = loop.run_until_complete(coroutine)
+        msgDiscord  = await bot.wait_for("message")
         bonChannel = msgDiscord.channel == ctx.channel
         if  joueur :
             # bonJoueur = msgDiscord.author.display_name == joueur
@@ -34,9 +32,7 @@ async def identification(ctx) -> str:
     while (not bonChannel) or (not bonJoueur) :
         bonChannel = False
         bonJoueur = False        
-        loop = asyncio.get_event_loop()
-        coroutine  = bot.wait_for("message")
-        msgDiscord = loop.run_until_complete(coroutine)
+        msgDiscord  = await bot.wait_for("message")
         bonChannel = msgDiscord.channel == ctx.channel
         bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
         if bonChannel and bonJoueur:

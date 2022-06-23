@@ -56,7 +56,7 @@ class Jeu:
     async def prompt(self,joueur : str = False):
         valueReceived = ""
         if self.__botContext != None:
-            await self.__promptExterne(self.__botContext,joueur)
+            valueReceived = await self.__promptExterne(self.__botContext,joueur)
         else:
             valueReceived = self.__promptExterne(joueur)
         if valueReceived.lower().find(self.__motCleExitGame) != -1:
@@ -144,6 +144,7 @@ class Jeu:
             aPrint += f"```Total : {index} sauvegardes\n"
             aPrint += f"Choissez une sauvegarde :\n"
             await self.affiche(aPrint)
+            aPrint = ""
             choix = await self.prompt()
             try:
                 choix = int(choix)
