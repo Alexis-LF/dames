@@ -14,7 +14,6 @@ async def prompt(ctx,joueur : str = False):
         bonChannel = msgDiscord.channel == ctx.channel
         if  joueur :
             bonJoueur = msgDiscord.author.display_name == joueur
-            bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
         else:
             bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
         
