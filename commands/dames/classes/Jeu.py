@@ -5,6 +5,7 @@ from asyncore import loop
 from types import coroutine
 from unittest import result
 from commands.dames.classes.Plateau import Plateau
+from commands.dames.classes.Pion import Pion
 from datetime import datetime
 from os import listdir,rename
 
@@ -32,6 +33,10 @@ class Jeu:
 
         self.__joueurCourant = 1
         self.__joueurAdverse = 2
+        pion = Pion(1)
+        self.__pionJoueurCourant = pion.affiche()
+        pion.setJoueur(2)
+        self.__pionJoueurAdverse = pion.affiche()
         self.tirageAuSort()
         self.__joueur1 = "joueur 1"
         self.__joueur2 = "joueur 2"
@@ -163,10 +168,19 @@ class Jeu:
         return f"{listSaves[choix-1]}"
 
     def __joueurSuivant__(self):
+        pion = Pion()
         if self.__joueurCourant == 1:
+            pion.setJoueur(2)
+            self.__pionJoueurCourant = pion.affiche()
+            pion.setJoueur(1)
+            self.__pionJoueurAdverse = pion.affiche()
             self.__joueurCourant = 2
             self.__joueurAdverse = 1
         else:
+            pion.setJoueur(1)
+            self.__pionJoueurCourant = pion.affiche()
+            pion.setJoueur(2)
+            self.__pionJoueurAdverse = pion.affiche()            
             self.__joueurCourant = 1
             self.__joueurAdverse = 2
     def __nomJoueur__(self, numero : int) -> str:
@@ -239,7 +253,7 @@ class Jeu:
             pionValide = False
             while pionValide == False:
                 msgs = f"{self.__plateau.affiche()}\n" + msgs
-                msgs += f"au tour de {self.__nomJoueur__(self.__joueurCourant)} le joueur {self.__joueurCourant}\n"
+                msgs += f"au tour de {self.__nomJoueur__(self.__joueurCourant)} le joueur {self.__pionJoueurCourant}\n"
                 # départ de tel pion
                 msgs += f'{self.__strDep1.replace("joueur X",self.__nomJoueur__(self.__joueurCourant))}\n'
                 # on envoie le texte à afficher
