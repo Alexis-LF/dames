@@ -76,8 +76,8 @@ async def dames(ctx, Arg = None):
     else:
         jeu = Jeu(affiche,prompt,messageAEdit,ctx)
         if Arg in argLoad :
-            await jeu.chargementJeu()
-            await jeu.commenceJeu()
+            if await jeu.chargementJeu():
+                await jeu.commenceJeu()
         elif Arg in argNew :
             j1 = None
             j2 = None
