@@ -47,7 +47,7 @@ async def dames(ctx, Arg = None):
     argNew = ["new", "nouveau"]
 
     msgAccueil = f"""
-        **Jeu des dames** version **bêta**
+        **Jeu des dames** version **1.0**
         **Liste des bugs:**```
          - S'il vous reste plus qu'un pion et qu'il ne peut pas bouger : la partie est bloquée```
         *Si vous constatez des bugs: allez raler auprès d'Alexis*
