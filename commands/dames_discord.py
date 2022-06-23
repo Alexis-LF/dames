@@ -13,7 +13,7 @@ async def prompt(ctx,joueur : str = False):
         msgDiscord  = await bot.wait_for("message")
         bonChannel = msgDiscord.channel == ctx.channel
         if  joueur :
-            # bonJoueur = msgDiscord.author.display_name == joueur
+            bonJoueur = msgDiscord.author.display_name == joueur
             bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
         else:
             bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
@@ -44,36 +44,17 @@ async def identification(ctx) -> str:
 
 @bot.command(aliases = ["dame"])
 async def dames(ctx, Arg = None):
+    argLoad = ["load", "reprendre"]
+    argNew = ["new", "nouveau"]
+
     msgAccueil = f"""
         **Jeu des dames** version **bêta**
-        **Mode débug :** ```
-         - les réactions ne sont pas implémentées : tout ce passe par message envoyé dans ce channel
-         - Mais une partie peut (normalement) être débutée, stoppée, reprise et finie !```
         **Liste des bugs:**```
          - S'il vous reste plus qu'un pion et qu'il ne peut pas bouger : la partie est bloquée```
          - On peut `/dames load` une partie finie, ce qui ne doit pas être le cas
         *Si vous constatez des bugs: allez raler auprès d'Alexis*
         """
-    messageAEdit = await ctx.channel.send(msgAccueil)
-    if Arg == "load" or Arg == "reprendre" :
-        jeu = Jeu(affiche,prompt,messageAEdit,ctx)
-        await jeu.chargementJeu()
-        await jeu.commenceJeu()
-        await ctx.channel.send("Fin du programme")
-    elif Arg == "new" or Arg == "nouveau" :
-        j1 = None
-        j2 = None
-        await affiche("joueur 1, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
-        j1 = await identification(ctx)
-        await affiche("joueur 2, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
-        j2 = await identification(ctx)
-        jeu = Jeu(affiche,prompt,messageAEdit,ctx)
-        jeu.nouvellePartie(j1,j2)
-        jeu.commenceJeu()
-        await ctx.channel.send("Fin du programme")
-
-    else:
-        regles = f"""
+    regles = f"""
         **Utilisation de la commande** :
         `/dames new` ou `/dames nouveau` : **créer une nouvelle partie**
         \t*Attention : si les 2 nouveaux joueurs avaient déjà une partie en leur nom, elle sera écrasée*
@@ -83,5 +64,32 @@ async def dames(ctx, Arg = None):
         Pour **choisir une case** :\n\ttapez la lettre de la ligne et le numéro de la colonne, par exemple `J3` ou `a10` ...
         Pour **changer de pion sélectionné** :\n\ttapez n'importe quoi, le jeu va ne va pas trouver la case de destination et vous devrez choisir de nouveau le pion à déplacer.
         Pour **manger en rafle** :\n\ttapez la liste des cases de destination séparés par une *virgule* sans espacement, par exemple `e2,C4` ou `E10,G8,e6` ...
+        \n\n** **
         """
-        await affiche(msgAccueil + regles,messageAEdit)
+    await ctx.channel.send(msgAccueil + regles)
+    messageAEdit = await ctx.channel.send("Sortie du jeu de dames de son carton...")
+
+    if not Arg:
+        await affiche(f"** **",messageAEdit)
+        return
+
+    if Arg not in (argLoad + argNew):
+        await affiche(f"Vous avez tapé : `/dames {Arg}`, ça ne permet pas de lancer le jeu",messageAEdit)
+    else:
+        jeu = Jeu(affiche,prompt,messageAEdit,ctx)
+        if Arg in argLoad :
+            await jeu.chargementJeu()
+            await jeu.commenceJeu()
+        elif Arg in argNew :
+            j1 = None
+            j2 = None
+            await affiche("joueur 1, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
+            j1 = await identification(ctx)
+            await affiche("joueur 2, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
+            j2 = await identification(ctx)
+            jeu.nouvellePartie(j1,j2)
+            jeu.commenceJeu()
+        else:
+            await affiche(f"MON CODE EST BOURRÉ : Problème de reconnaissance de l'arguement {Arg} ",messageAEdit)
+        await ctx.channel.send("Le jeu de dame est rangé.")
+    
