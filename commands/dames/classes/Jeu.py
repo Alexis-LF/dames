@@ -7,8 +7,6 @@ from unittest import result
 from commands.dames.classes.Plateau import Plateau
 from datetime import datetime
 from os import listdir,rename
-import asyncio
-import nest_asyncio
 
 
 
@@ -20,7 +18,8 @@ class Jeu:
         self.__msgContext = None
         self.__botContext = None
         if msgContext != None and botContext != None:
-            nest_asyncio.apply()
+            pass
+            # nest_asyncio.apply()
             self.__msgContext = msgContext
             self.__botContext = botContext
         self.__afficheExterne = fxAffiche

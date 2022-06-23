@@ -1,10 +1,6 @@
 from config import bot
 from commands.dames.classes.Jeu import Jeu
 
-import asyncio
-import nest_asyncio
-nest_asyncio.apply()
-
 async def affiche(msg,messageAEdit):
     await messageAEdit.edit(content=msg)
 
