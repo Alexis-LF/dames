@@ -19,8 +19,6 @@ class Jeu:
         self.__msgContext = None
         self.__botContext = None
         if msgContext != None and botContext != None:
-            pass
-            # nest_asyncio.apply()
             self.__msgContext = msgContext
             self.__botContext = botContext
         self.__afficheExterne = fxAffiche

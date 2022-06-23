@@ -16,7 +16,6 @@ async def prompt(ctx,joueur : str = None, getNickname : bool = False) -> str:
         if bonChannel and msgDiscord.content.strip() == EXIT_DAMES_CODE:
             return "exit"
         if  joueur != None :
-            print(f"le jouueur doit s'appeller {joueur}")
             bonJoueur = msgDiscord.author.display_name == joueur
         else:
             bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
