@@ -1,10 +1,10 @@
-from config import bot
+from config import bot, EXIT_DAMES_CODE
 from commands.dames.classes.Jeu import Jeu
 
 async def affiche(msg,messageAEdit):
     await messageAEdit.edit(content=msg)
 
-async def prompt(ctx,joueur : str = False):
+async def prompt(ctx,joueur : str = None, getNickname : bool = False) -> str:
     bonChannel = False
     bonJoueur = False
     while (not bonChannel) or (not bonJoueur) :
@@ -12,34 +12,27 @@ async def prompt(ctx,joueur : str = False):
         bonJoueur = False        
         msgDiscord  = await bot.wait_for("message")
         bonChannel = msgDiscord.channel == ctx.channel
-        if  joueur :
+        # envoi d'un signal d'exit pour les administrateurs
+        if bonChannel and msgDiscord.content.strip() == EXIT_DAMES_CODE:
+            return "exit"
+        if  joueur != None :
+            print(f"le jouueur doit s'appeller {joueur}")
             bonJoueur = msgDiscord.author.display_name == joueur
         else:
             bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
         
         if bonChannel and bonJoueur:
-            msg = msgDiscord.content.strip()
-            await msgDiscord.delete()
-            return msg
+            if getNickname:
+                joueur = msgDiscord.author.display_name
+                await msgDiscord.delete()                
+                return joueur
+            else:
+                msg = msgDiscord.content.strip()
+                await msgDiscord.delete()
+                return msg
         else:
             print("\tmauvaise personne concenée")
-    print("ERREUR INTERNE : dans prompt")
-
-async def identification(ctx) -> str:
-    bonChannel = False
-    bonJoueur = False
-    while (not bonChannel) or (not bonJoueur) :
-        bonChannel = False
-        bonJoueur = False        
-        msgDiscord  = await bot.wait_for("message")
-        bonChannel = msgDiscord.channel == ctx.channel
-        bonJoueur = msgDiscord.author.display_name != ctx.me.display_name
-        if bonChannel and bonJoueur:
-            joueur = msgDiscord.author.display_name
-            # print(f"joueur {joueur} qui a envoyé \"{msgDiscord.content}\"")
-            await msgDiscord.delete()
-            return joueur
-    print("ERREUR INTERNE : dans identification")    
+    print("ERREUR INTERNE : dans prompt") 
 
 @bot.command(aliases = ["dame"])
 async def dames(ctx, Arg = None):
@@ -82,12 +75,12 @@ async def dames(ctx, Arg = None):
             j1 = None
             j2 = None
             await affiche("joueur 1, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
-            j1 = await identification(ctx)
+            j1 = await prompt(ctx,getNickname=True)
             await affiche("joueur 2, identifiez vous en envoyant un message lambda ci-dessous",messageAEdit)
-            j2 = await identification(ctx)
+            j2 = await prompt(ctx,getNickname=True)
             jeu.nouvellePartie(j1,j2)
             await jeu.commenceJeu()
         else:
             await affiche(f"MON CODE EST BOURRÉ : Problème de reconnaissance de l'arguement {Arg} ",messageAEdit)
-        await ctx.channel.send("Le jeu de dame est rangé.")
+        await ctx.channel.send("Le jeu de dames est rangé.")
     

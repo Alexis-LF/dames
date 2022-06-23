@@ -57,7 +57,7 @@ class Jeu:
         else:
             self.__afficheExterne(msg)
 
-    async def prompt(self,joueur : str = False):
+    async def prompt(self,joueur : str = None):
         valueReceived = ""
         if self.__botContext != None:
             valueReceived = await self.__promptExterne(self.__botContext,joueur)
@@ -253,7 +253,7 @@ class Jeu:
             pionValide = False
             while pionValide == False:
                 msgs = f"{self.__plateau.affiche()}\n" + msgs
-                msgs += f"au tour de {self.__nomJoueur__(self.__joueurCourant)} le joueur {self.__pionJoueurCourant}\n"
+                msgs += f"Au tour de **{self.__nomJoueur__(self.__joueurCourant)}** le joueur `{self.__pionJoueurCourant}`\n"
                 # départ de tel pion
                 msgs += f'{self.__strDep1.replace("joueur X",self.__nomJoueur__(self.__joueurCourant))}\n'
                 # on envoie le texte à afficher
