@@ -1,4 +1,4 @@
-# Jeu de dames en bash et sur discord
+# Jeu de dames en terminal et sur discord
 ## Prérequis
  - Python 3
  - Pour discord : avoir un bot et un token dans un fichier .env
